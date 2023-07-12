@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todoey/screens/add_task_screen.dart';
+import '../model/task.dart';
 import '../widgets/tasks_list.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key});
+
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> tasks = [
+    Task(name: 'Pray'),
+    Task(name: 'Take a bath'),
+    Task(name: 'Coding')
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +30,11 @@ class TasksScreen extends StatelessWidget {
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom
                 ),
-                child: const AddTaskScreen(),
+                child: AddTaskScreen(addTaskCallBack: (newTask) {
+                  setState(() {
+                    tasks.add(Task(name: newTask));
+                  });
+                }),
               ),
             ),
             backgroundColor: Colors.transparent,
@@ -57,9 +73,9 @@ class TasksScreen extends StatelessWidget {
                       fontSize: 50
                   ),
                 ),
-                const Text(
-                  '12 Tasks',
-                  style: TextStyle(
+                Text(
+                  tasks.length > 1 ? '${tasks.length} Tasks' : '1 Task',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18
                   ),
@@ -79,7 +95,7 @@ class TasksScreen extends StatelessWidget {
               height: 100,
               child: Container(
                 padding: const EdgeInsets.only(left: 30,right: 30),
-                child: const TasksList(),
+                child: TasksList(tasks: tasks),
               ),
             ),
           )
