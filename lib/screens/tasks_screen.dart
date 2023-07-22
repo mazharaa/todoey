@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todoey/model/task_data.dart';
 import 'package:todoey/screens/add_task_screen.dart';
-import '../model/task.dart';
 import '../widgets/tasks_list.dart';
 
-class TasksScreen extends StatefulWidget {
+class TasksScreen extends StatelessWidget {
   const TasksScreen({super.key});
 
   @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  List<Task> tasks = [
-    Task(name: 'Pray'),
-    Task(name: 'Take a bath'),
-    Task(name: 'Coding')
-  ];
-
-  @override
   Widget build(BuildContext context) {
+    final providerTask = Provider.of<TaskData>(context);
+
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
@@ -31,9 +23,10 @@ class _TasksScreenState extends State<TasksScreen> {
                   bottom: MediaQuery.of(context).viewInsets.bottom
                 ),
                 child: AddTaskScreen(addTaskCallBack: (newTask) {
-                  setState(() {
-                    tasks.add(Task(name: newTask));
-                  });
+                  providerTask.addTask(newTask);
+                  // setState(() {
+                  //   providerTask.task.add(Task(name: newTask));
+                  // });
                 }),
               ),
             ),
@@ -74,7 +67,8 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  tasks.length > 1 ? '${tasks.length} Tasks' : '1 Task',
+                  providerTask.task.length > 1
+                      ? '${providerTask.task.length} Tasks' : '1 Task',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18
@@ -95,7 +89,7 @@ class _TasksScreenState extends State<TasksScreen> {
               height: 100,
               child: Container(
                 padding: const EdgeInsets.only(left: 30,right: 30),
-                child: TasksList(tasks: tasks),
+                child: TasksList(),
               ),
             ),
           )
